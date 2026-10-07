@@ -77,7 +77,7 @@ The database uses foreign key relationships and normalized design principles to 
 1. Clone the repository:
  
 ```bash
-git clone https://github.com/<username>/listit.git
+git clone https://github.com/ccrosby1/ListIt/tree/88b1fdec0b3894729ce45733bc2de1f08dda131c/Milestone
 cd listit
 ```
  
