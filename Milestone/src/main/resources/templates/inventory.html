@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="~{layouts/default}">
+    <body>
+        <div layout:fragment="content">	
+			<div class="row align-items-center">
+				<div class="col px-4">
+					<div class="g3 ">
+		                <h1 th:text="${title}">My Dashboard</h1>
+					</div>
+				</div>
+				<div class="col">		
+						<div class="float-end px-4">	
+							<a th:href="@{/user/inventory/add/}">
+								<span class="add align-bottom">Add Catalog</span>
+								<span class="feather-add" data-feather="plus-square"></span>
+							</a>
+						</div>
+					</div>
+				</div>	
+					
+			<div class="row">
+				<hr class="border primary border-2 opacity-50">
+			</div>
+			
+			<div class="col col-10 g-3">
+			    <!-- Owned Catalogs -->
+			    <div class="row dashboard-card-container">
+			        <th:block th:each="inv : ${invs}"
+			                  th:insert="~{fragments/catalog-card :: catalogCard(inv)}">
+			        </th:block>
+			    </div>
+
+			    <!-- Shared Catalogs -->
+			    <div class="row dashboard-card-container mt-3"
+			         th:if="${sharedInvs != null and !sharedInvs.isEmpty()}">
+
+			        <h3 class="px-3">Shared With You</h3>
+
+			        <th:block th:each="inv : ${sharedInvs}"
+			                  th:insert="~{fragments/catalog-card :: sharedCatalogCard(inv)}">
+			        </th:block>
+			    </div>
+			</div>
+			<div class="row">
+				<div class="col"></div>		<!-- left column -->
+				<div class="col-10">	
+					<div class="col text-center footer">
+						<p><a th:href="@{/user/dashboard/}">Back to Dashboard</a></p>
+					</div>
+				</div>
+				<div class="col"></div>		<!-- right column -->
+        	</div>	
+        </div>		
+    </body>
+</html>

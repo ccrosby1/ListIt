@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="~{layouts/default}">
+    <body>
+        <div layout:fragment="content">
+            <div class="row">
+				<div class="col"></div>		<!-- left column -->
+				<div class="col-10 g3 align-items-center">
+	                <h1 th:text="${title}" >My Dashboard</h1>
+	                <p th:text="${message}">Welcome to your Inventory Dashboard!</p>
+				</div>
+				<div class="col"></div>		<!-- right column -->
+			</div>
+			<div class="col col-10 g-3">
+				<div class="row dashboard-card-container">
+									
+					<!-- Admin Dashboard Card -->
+					<div th:replace="~{fragments/dashboard-card :: dashboardCard(
+					        '/images/AdminDashboardCard.png',
+					        'Admin Dashboard',
+					        'Manage users, monitor system activity, and oversee inventory data across all accounts.',
+					        '/admin/dashboard/',
+					        'bg-primary'
+					    )}"
+					    sec:authorize="hasRole('admin')">
+					</div>
+									
+					<!-- Inventory List Card -->
+					<div th:replace="~{fragments/dashboard-card :: dashboardCard(
+					        '/images/InventoryListsCard.png',
+					        'Inventory Lists',
+					        'Create and manage inventory lists, track item quantities, and organize your stored items.',
+					        '/user/inventory/',
+					        'bg-primary'
+					    )}">
+					</div>
+										
+					<!-- Category List Card -->
+					<div th:replace="~{fragments/dashboard-card :: dashboardCard(
+					        '/images/CategoryListCard.png',
+					        'Category Lists',
+					        'Create custom categories to organize inventory items and improve list management.',
+					        '/user/categories/',
+					        'bg-warning'
+					    )}">
+					</div>
+									
+					<!-- Account Card -->
+					<div th:replace="~{fragments/dashboard-card :: dashboardCard(
+					        '/images/AccountCard.png',
+					        'Account',
+					        'Update your profile information, manage account settings, and maintain your login credentials.',
+					        '/user/account/',
+					        'bg-success'
+						    )}">
+					</div>
+				</div>>
+			<div class="col"></div>		<!-- right column -->
+    	   </div>
+       </div>
+   </body>

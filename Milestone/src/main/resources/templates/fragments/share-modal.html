@@ -1,0 +1,51 @@
+<div th:fragment="shareModal">
+    <div class="modal fade" id="shareCatalogModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Share This Catalog</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+
+                    <!-- Username Input -->
+                    <div class="mb-3">
+                        <label for="shareUsername" class="form-label">Share with Username</label>
+                        <input type="username"
+                               class="form-control"
+                               id="shareUsername"
+                               placeholder="Enter user Username">
+                    </div>
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button id="shareSubmitBtn" class="btn btn-primary">
+                            <span data-feather="share-2"></span> Share
+                        </button>
+                    </div>
+
+                    <hr>
+
+                    <!-- Shared Users List -->
+                    <h6>Currently Shared With</h6>
+
+                    <table class="table table-sm table-striped align-middle" id="sharedUsersTable">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th style="width: 80px;" class="text-center">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sharedUsersBody">
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

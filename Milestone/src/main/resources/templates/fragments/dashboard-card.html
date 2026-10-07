@@ -1,0 +1,17 @@
+<div th:fragment="dashboardCard(image, title, text, link, bg)"
+	class="card mx-2 my-2"
+	style="width: 20rem">
+    <div style="padding: 1px; border: 1px solid transparent;"></div>
+
+    <span class="placeholder col-12" th:classappend="${bg}">
+        <img th:src="@{${image}}"
+             class="card-img-top card-image"
+             th:alt="${title}">
+    </span>
+
+    <div class="card-body">
+        <h5 class="card-title" th:text="${title}"></h5>
+        <p class="card-text" th:text="${text}"></p>
+       <a th:href="@{${link}}" class="stretched-link"></a>
+	</div>
+</div>

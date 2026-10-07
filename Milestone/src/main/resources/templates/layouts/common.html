@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="layouts/default">
+	
+    <body>
+		<!-- Common Header FRAGMENT -->
+		<div th:fragment="header">
+						
+			<nav class="navbar navbar-expand-md navbar-dark bg-dark px-4">
+			 
+				<a class="navbar-brand" href="#"><span class="feather" data-feather="box"></span> ListIT</a>
+				
+			    
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+					data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+					aria-expanded="false" aria-label="Toggle navigation">
+			      	<span class="navbar-toggler-icon"></span>
+			    </button>
+				
+			    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+			      <ul class="navbar-nav mr-auto navbar-text "><!--mb-2 mb-lg-0-->
+			       
+			        <li class="nav-item dropstart" sec:authorize="isAuthenticated()">
+			          <a class="nav-link dropdown-toggle" sec:authorize="isAuthenticated()" href="#" role="button" 
+					  		data-bs-toggle="dropdown" aria-expanded="false" th:text="${username}">User Name</a>
+			            
+			          
+			          <ul class="dropdown-menu navbar-dark bg-dark" >
+						<li><a class="dropdown-item" href="/user/dashboard/"><span class="feather" style="width: 20px;" data-feather="settings"></span> My Dashboard</a></li>
+						<li><a class="dropdown-item" sec:authorize="hasRole('ROLE_admin')" href="/admin/dashboard/"><span class="feather" style="width: 20px;" data-feather="cog"></span> Admin Dashboard</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" sec:authorize="hasRole('ROLE_admin')" href="#">
+							<span class="feather" style="width: 20px;" data-feather="users"></span> User List</a></li>
+						<li><hr class="dropdown-divider" sec:authorize="hasRole('ROLE_admin')"></li>
+			            <li><a class="dropdown-item" href="/user/inventory/"><span class="feather" style="width: 20px;" data-feather="box"></span> Inventory</a></li>
+			            <li><a class="dropdown-item" href="/user/categories/"><span class="feather" style="width: 20px;" data-feather="list"></span> Categories</a></li>
+			            <li><hr class="dropdown-divider"></li>
+			            <li><a class="dropdown-item" href="/user/account/"><span class="feather" style="width: 20px;" data-feather="user"></span> Account</a></li>
+						
+			          </ul>
+			        </li>
+			        <li class="nav-item">
+			          <a class="nav-link active" aria-current="page" href="/user/dashboard/"><span class="feather" style="width: 20px;" data-feather="home"></span></a>
+			        </li>
+			        <li class="nav-item" sec:authorize="isAnonymous()">
+			          <a class="nav-link" href="/user/dashboard/"><span class="feather" style="width: 20px;" data-feather="log-in"></span> Login</a>
+			        </li>
+					<li class="nav-item" sec:authorize="isAuthenticated()"><form th:action="@{/logout}" method="post" class="d-inline"><!-- sec:authorize="isAuthenticated()"-->
+									<button type="submit" class="nav-link" ><span class="feather" style="width: 20px;" data-feather="log-out"></span> Logout</button>
+							</form>
+					</li>
+			      </ul>
+			      
+			    </div>
+			 
+			</nav>
+			
+		</div>
+		
+		<!-- Footer FRAGMENT -->
+		<div th:fragment="footer">
+			<div class="footer">
+		        <p>Copyright &copy; 2025 Milestone Inventory <span class="feather" data-feather="feather"></span> Feather Icons</p><!-- Copyright -->
+				<script>
+		           feather.replace();
+		       </script>									
+		    </div>
+		</div>
+		
+	</body>
+</html>

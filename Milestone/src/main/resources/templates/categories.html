@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="~{layouts/default}">
+
+    <body>
+
+        <div layout:fragment="content">
+
+			<!-- ALERT -->
+			<div class="row justify-content-center">
+				<div class="col-md-6">
+					<div th:if="${message}" th:class="'alert alert-dismissible ' +  
+								(${messageType} == 'success' ? 'alert-success' : 'alert-danger')" 
+								role="alert" 
+								id="flash-alert">
+						<strong th:text="${message}">Success/Failure message</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+			<!-- Page Header -->
+			<div class="row px-3">
+				<div class="col-2" style="width:95px;">
+					
+				</div>		<!-- left column -->
+				<div class="col">
+					
+						<h1 th:text="${title}">My Categories</h1>
+						<p class="primary"><i>*If you delete a <u>Parent Directory</u> all their Children Directories will be deleted as well.</i></p>
+					
+				</div>				
+	       
+				<div class="col-2">		
+					<div class="bg-main float-end" style="width:150px;">
+					 	
+						<a th:href="@{/user/categories/add}">
+						    <span class="add align-bottom">Add Category</span>
+						    <span class="feather-add" data-feather="plus-square"></span>
+						</a>
+							
+					</div>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col">
+					<table id="categoriesList" class="table table-striped table-hover" th:if="${categories != null}">
+						<thead>
+						    <tr>
+						        <th scope="col" class="dt-head-center" style="width:5%;">#</th>
+						        <th scope="col">Category Name</th>
+						        <th scope="col">Parent ID</th>
+						        <th scope="col" class="dt-head-center" style="width:10%;">Actions</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr th:each="cat, iterStat : ${categories}">
+						        <td class="primary" th:text="${iterStat.count}"></td>
+
+						        <!-- Category Name -->
+						        <td class="primary" th:text="${cat.name}"></td>
+
+						        <!-- Parent ID -->
+								<td class="primary"
+								    th:text="${cat.parentId == 0 ? 'None' : categoryNames[cat.parentId]}">
+								</td>
+
+						        <!-- Actions -->
+						        <td>
+						            <a th:href="@{/user/categories/edit/{id}(id=${cat.id})}">
+						                <i class="feather-edit bg_primary" data-feather="edit"></i>
+						            </a>
+
+									<a th:href="@{/user/categories/delete/{id}(id=${cat.id})}"
+									   onclick="return confirm('Are you sure you want to delete this category? \n' +
+									   'Any child categories or products associated with it will be deleted as well.');">
+									    <i class="feather-delete" data-feather="x-square"></i>
+									</a>
+						        </td>
+						    </tr>
+						</tbody>
+					</table>		
+			</div>
+			<p class="text-center"><a th:href="@{/user/dashboard/}">Back to Dashboard</a></p>
+        </div>
+		
+		<!-- Load DataTable -->
+		<script>
+			var DataTable = require( 'datatables.net' );
+			require( 'datatables.net-responsive' );
+			 
+			let table = new DataTable('#categoriesList', {
+			    responsive: true
+			});
+		</script>
+		
+		<!-- DataTable config -->
+		<script>
+			$(document).ready( function () {
+			    $('#categoriesList').DataTable(						 {
+					stateSave: true,
+					layout: {
+					        topStart: {
+					            pageLength: {
+					                menu: [ 10, 25, 50,100 ]
+					            }
+					        },
+					        topEnd: {
+					            search: {
+					                placeholder: 'Type search here'
+					            }
+					        }
+							
+					},
+					columnDefs: [
+					    {
+					        targets: -1,
+					        className: 'dt-body-right'
+					    },
+					    {
+					        targets: 0,
+					        className: 'dt-body-center'
+					    }
+					]
+				});
+			} );
+		</script>
+    </body>
+</html>

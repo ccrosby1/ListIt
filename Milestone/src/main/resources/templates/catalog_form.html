@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/center_form}">
+
+<body>
+<div layout:fragment="content">
+<div class="center-form-container">
+    <h1 th:text="${title}">Catalog Form</h1>
+
+    <span th:if="${error}">
+        <p class="alert alert-danger" th:text="${error}"></p>
+    </span>
+
+    <p th:if="${mode == 'edit'}">
+        <span class="primary" th:text="${created}"></span><br />
+        <span th:text="${updated}"></span>
+    </p>
+
+    <!-- Dynamic Form Action -->
+	<form th:href="${mode == 'add'} 
+	        ? @{/user/inventory/} 
+	        : @{/user/catalog(logid=__${logId}__)}"
+          th:object="${catalog}"
+          method="post"
+          enctype="multipart/form-data">
+
+		<input type="hidden" th:if="${userId}" name="user_id" th:value="${userId}" />
+
+        <!-- Name -->
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text"
+                   class="form-control"
+                   th:field="*{name}"
+                   id="name"
+                   name="name"
+                   required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control"
+                      id="description"
+                      th:field="*{description}"
+                      rows="3"></textarea>
+        </div>
+
+        <!-- Image -->
+        <div class="form-group mb-3">
+
+            <!-- Only show preview in edit mode -->
+            <div th:if="${mode == 'edit'}" class="row mb-2">
+                <div class="col">
+					<img th:src="@{/uploads/{id}/{img}(id=${logId}, img=${catalog.image})}"
+					     class="card-img-top thumbnail"
+					     style="width:8rem;"
+						 alt="Catalog Image"
+		                 onerror="this.onerror=null; this.src='/images/defaultInventoryList.png';">
+                </div>
+            </div>
+
+            	<label for="newimage" class="form-label">Image:</label>
+
+            	<!-- Keep existing image in edit mode -->
+            	<input type="hidden" th:if="${mode == 'edit'}" th:field="*{image}">
+
+            	<input type="file"
+                   		class="form-control"
+                   		id="newimage"
+                   		name="newimage"
+                   		accept="image/png, image/gif, image/jpeg">
+        	</div>
+
+        	<!-- Color -->
+        	<div class="form-group mb-3">
+            	<label for="color" class="form-label">Color:</label>
+            		<div class="color-wrapper">
+						<input type="color"
+	                   		class="form-control color-input"
+	                   		th:field="*{color}"
+	                   		id="color"
+	                   		name="color">
+					</div>
+        		</div>
+
+        		<!--  Button -->
+				<div class="col-auto mt-4 text-center">
+		            <button class="btn btn-success" type="submit"
+		                    th:text="${mode == 'add' ? 'Add Catalog' : 'Save Changes'}">
+		                Submit
+		            </button>
+		        </div>
+    		</form>
+    		<!-- Back Link -->
+    		<p class="text-center mt-3">
+				<a th:href="@{${mode == 'add' 
+			           ? '/user/inventory/' 
+			           : '/user/catalog/?logid=' + logId}}"
+			      th:text="${mode == 'add' 
+    	               ? 'Back to Inventory List' 
+        	           : 'Back to Product List'}">
+			   </a>
+    		</p>
+			</div>
+		</div>
+	</body>
+</html>

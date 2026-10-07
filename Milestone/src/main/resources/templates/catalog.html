@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="~{layouts/default}">
+    <body>
+        <div layout:fragment="content">
+			<!-- ALERT -->
+			<div class="row justify-content-center">
+				<div class="col-md-6">
+					<div th:if="${message}" th:class="'alert alert-dismissible ' +  
+								(${messageType} == 'success' ? 'alert-success' : 'alert-danger')" 
+								role="alert" 
+								id="flash-alert">
+						<strong th:text="${message}">Success/Failure message</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+			<!-- Page Header -->
+			<div class="row px-3">
+				<div class="col-2" style="width:95px;" th:if="${canEdit}">
+				    <div class="dropdown">
+				        <span class="feather-menu" data-feather="menu" 
+				              id="catalogMenuButton" 
+				              data-bs-toggle="dropdown" 
+				              aria-expanded="false"
+				              style="cursor:pointer;"></span>
+				        <ul class="dropdown-menu" aria-labelledby="catalogMenuButton">
+				            <li>
+				                <a class="dropdown-item" 
+				                   th:href="@{/user/catalog/edit/(logid=${logid})}">
+				                    <span class="feather-edit" data-feather="edit"></span> Edit Catalog
+				                </a>
+				            </li>
+							<li>
+								<a class="dropdown-item"
+								   href="#"
+								   onclick="openShareModal()">
+								    <span class="feather-share-2" data-feather="share-2"></span> Share Catalog
+								</a>
+				            </li>
+				            <li>
+				                <a class="dropdown-item"
+				                   th:href="@{/user/catalog/delete/{logid}(logid=${logid}, userId=${userid})}"
+				                   onclick="return confirm('Are you sure you want to delete this catalog?\nAll associated products will be deleted as well.');">
+				                    <span class="feather-delete" data-feather="trash-2"></span> Delete Catalog
+				                </a>
+				            </li>
+				        </ul>
+				    </div>
+				</div>		<!-- left column -->
+				<div class="col" th:style="|background-color:${color};|">
+						<h1 th:text="${title}">My Catalog</h1>
+				</div>				
+				<div class="col-2" th:if="${canEdit}">		
+					<div class="bg-main float-end" style="width:130px;">
+						<a th:href="@{/user/product/add/(logid=${logid})}">
+							<span class="add align-bottom">Add Product</span>
+							<span class="feather-add" data-feather="plus-square"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<hr class="border primary border-2 opacity-50">
+			</div>				
+			<div class="row">
+				<div class="col">
+                    <table id="products" class="table table-striped">
+                        <thead>
+                            <tr>
+								
+                                <th scope="col" class="dt-head-center" style="width:5%;">ID</th>
+								<th scope="col" style="width:10%;">IMG</th>
+								<th scope="col">Name</th>
+                                <th scope="col">Brand</th>
+								<th scope="col" style="width:10%">Category</th>
+								<th scope="col" style="width:5%;">Qty.</th>
+                                <th scope="col" style="width:10%;"class="dt-head-right">Price</th>
+								<th scope="col" class="dt-head-center" style="width:10%;" th:if="${canEdit}"> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="product : ${products}"
+								class="product-row"
+								th:data-id="${product.id}"
+								th:data-name="${product.name}"
+								th:data-brand="${product.brand}"
+								th:data-category="${product.categoryName}"
+								th:data-qty="${product.quantity}"
+								th:data-price="${product.price}"
+								th:data-image="@{'/uploads/' + ${logid} + '/' + ${product.image}}"
+								th:data-description="${product.description}">
+									
+                                <td class="dt-body-center" th:text="${product.id}"></td>
+								<td><img th:src="@{'/uploads/' + ${logid} + '/' + ${product.image}}"
+										 class="card-img-top"
+										 style="min-height:20px; max-height:50px; max-width:50px;" alt="Product Image"
+										 onerror="this.onerror=null; this.src='/images/defaultProduct.png';"> <!-- inventory image box--> </td>
+								<td th:text="${product.name}"></td>
+                                <td th:text="${product.brand}"></td>
+								<td th:text="${product.categoryName}"></td>
+								<td th:text="${product.quantity}"></td>
+                                <td class="dt-body-right" th:text="${#numbers.formatCurrency(product.price)}"></td><!--${product.price}-->
+                                <td class="dt-body-center" th:if="${canEdit}">
+									<a th:href="@{/user/product/edit/{productId}(productId=${product.id}, logid=${logid})}">
+										<span class="feather-edit" data-feather="edit"></span>
+									</a>
+									<a th:href="@{/user/product/delete/{productId}(productId=${product.id}, logid=${logid})}"
+											onclick="return confirm('Are you sure you want to delete this product?');">
+										<span class="feather-delete" data-feather="x-square"></span>
+									</a>		
+								</td>
+                            </tr>
+                        </tbody>
+                    </table>
+		
+					<!-- DataTable config -->
+					<script>
+					    $(document).ready(function () {
+					        $('#products').DataTable({
+					            stateSave: true,
+
+					            layout: {
+					                topStart: {
+					                    pageLength: {
+					                        menu: [10, 25, 50, 100]
+					                    }
+					                },
+
+					                topEnd: {
+					                    search: {
+					                        placeholder: 'Type search here'
+					                    }
+					                }
+					            }
+					        });
+					    });
+					</script>
+				</div>
+			</div>
+			<div class="row">	
+				<div class="col text-center footer">
+					<p><a th:href="@{/user/inventory/(userId=${userid})}">Back to Inventory List</a></p>
+				</div>
+			</div>
+			
+			<!-- product details modal -->
+			<div th:replace="~{fragments/product-modal :: productModal}"></div>
+			
+			<!-- share catalog modal -->
+			<div th:replace="~{fragments/share-modal :: shareModal}"></div>
+			
+			<script>
+			  document.addEventListener('DOMContentLoaded', () => {
+			    const flash = document.getElementById('flash-alert');
+			    if (!flash) return;
+
+			    flash.classList.add('fade','show');
+
+			    setTimeout(() => {
+			      flash.classList.remove('show');
+			      flash.addEventListener('transitionend', () => flash.remove(), { once: true });
+			    }, 4000);
+			  });
+			</script>
+			<!-- product details modal -->
+			<script>
+				document.addEventListener("DOMContentLoaded", () => {
+
+				    $('#products tbody').on('click', 'tr', function (e) {
+
+				        if ($(e.target).closest("a").length) {
+				            return;
+				        }
+
+				        const row = this;
+
+				        document.getElementById("modalId").textContent = row.dataset.id;
+				        document.getElementById("modalName").textContent = row.dataset.name;
+				        document.getElementById("modalBrand").textContent = row.dataset.brand;
+				        document.getElementById("modalCategory").textContent = row.dataset.category;
+				        document.getElementById("modalQty").textContent = row.dataset.qty;
+				        document.getElementById("modalPrice").textContent =
+				            Number(row.dataset.price).toFixed(2);
+
+				        document.getElementById("modalDescription").textContent =
+				            row.dataset.description || "No description provided.";
+
+							const modalImage = document.getElementById("modalImage");
+
+							modalImage.onerror = function () {
+							    this.onerror = null;
+							    this.src = "/images/defaultProduct.png";
+							};
+
+							modalImage.src = row.dataset.image;						        
+
+				        const modalElement = document.getElementById("productModal");
+				        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+				        modal.show();
+				    });
+				});
+			</script>
+			
+			<!-- share modal-->
+			<script th:inline="javascript">
+
+			    const catalogId = /*[[${logid}]]*/ 0;
+
+			    function openShareModal() {
+			        const modalEl = document.getElementById("shareCatalogModal");
+			        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+			        modal.show();
+
+			        const tbody = document.getElementById("sharedUsersBody");
+			        tbody.innerHTML = "";
+
+			        fetch(`/user/catalog/share/${catalogId}`)
+			            .then(res => res.json())
+			            .then(users => {
+			                users.forEach(u => {
+			                    const row = document.createElement("tr");
+			                    row.dataset.sharedUserId = u.sharedUserId;
+
+			                    row.innerHTML = `
+			                        <td>${u.sharedUsername}</td>
+			                        <td class="text-center">
+			                            <button class="btn btn-danger btn-sm remove-share-btn">
+			                                <span data-feather="trash-2"></span>
+			                            </button>
+			                        </td>
+			                    `;
+			                    tbody.appendChild(row);
+			                });
+
+			                feather.replace();
+			            });
+			    }
+
+			    document.addEventListener("DOMContentLoaded", () => {
+
+			        // SHARE BUTTON CLICK
+			        document.getElementById("shareSubmitBtn").addEventListener("click", () => {
+			            const username = document.getElementById("shareUsername").value.trim();
+			            if (!username) return;
+
+			            fetch(`/user/catalog/share/${catalogId}`, {
+			                method: "POST",
+			                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			                body: `username=${encodeURIComponent(username)}&permission=view`
+			            })
+			            .then(res => res.text())
+			            .then(result => {
+			                if (result === "OK") {
+
+			                    const tbody = document.getElementById("sharedUsersBody");
+			                    const row = document.createElement("tr");
+
+			                    row.dataset.sharedUserId = "NEW";
+
+			                    row.innerHTML = `
+			                        <td>${username}</td>
+			                        <td class="text-center">
+			                            <button class="btn btn-danger btn-sm remove-share-btn">
+			                                <span data-feather="trash-2"></span>
+			                            </button>
+			                        </td>
+			                    `;
+			                    tbody.appendChild(row);
+
+			                    feather.replace();
+			                    document.getElementById("shareUsername").value = "";
+
+			                } else {
+			                    alert("Failed to share catalog. User may not exist or is already shared.");
+			                }
+			            });
+			        });
+
+			        // REMOVE SHARE BUTTON CLICK
+			        document.getElementById("sharedUsersBody").addEventListener("click", (e) => {
+			            const btn = e.target.closest(".remove-share-btn");
+			            if (!btn) return;
+
+						// Confirm before removing
+						if (!confirm("Are you sure you want to remove this user's access to the catalog?")) {
+						    return;
+						}
+						   
+			            const row = btn.closest("tr");
+			            const sharedUserId = row.dataset.sharedUserId;
+
+			            fetch(`/user/catalog/share/${catalogId}/${sharedUserId}`, {
+			                method: "DELETE"
+			            })
+			            .then(res => res.text())
+			            .then(result => {
+			                if (result === "OK") {
+			                    row.remove();
+			                } else {
+			                    alert("Failed to remove share.");
+			                }
+			            });
+			        });
+
+			    });
+
+			</script>
+        </div>
+    </body>

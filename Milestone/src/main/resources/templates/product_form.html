@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layouts/center_form}">
+
+<body>
+<div layout:fragment="content">
+	<div class="center-form-container">
+    <div>
+        <h1 th:text="${title}">Product Form</h1>
+
+        <!-- Edit mode timestamps -->
+        <div th:if="${productModel.id != null}">
+            <p>
+                <span class="primary" th:text="${created}"></span><br />
+                <span th:text="${updated}"></span>
+            </p>
+        </div>
+
+        <span th:if="${error}">
+            <p class="alert alert-danger" th:text="${error}">errors</p>
+        </span>
+    </div>
+
+    <form th:action="${productModel.id == 0} ?
+                        @{/user/product/add/(logid=${catalogId})} :
+                        @{/user/product/edit/{id}(id=${productModel.id}, logid=${catalogId})}"
+          th:object="${productModel}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <input type="hidden" th:value="${catalogId}" id="catalogId">
+
+        <!-- Product Name -->
+        <div class="form-group mb-3">
+            <label class="form-label">Product Name:</label>
+            <input class="form-control" type="text" th:field="*{name}">
+            <h5 class="alert alert-danger"
+                th:if="${#fields.hasErrors('name')}"
+                th:errors="*{name}">Name Error</h5>
+        </div>
+
+        <!-- Brand -->
+		<div class="form-group mb-3">
+            <label class="form-label">Brand:</label>
+            <input class="form-control" type="text" th:field="*{brand}">
+            <h5 class="alert alert-danger"
+                th:if="${#fields.hasErrors('brand')}"
+                th:errors="*{brand}">Brand Error</h5>
+        </div>
+
+        <!-- Category Dropdown -->
+		<div class="form-group mb-3">
+            <label class="form-label">Category:</label>
+            <select class="form-control" th:field="*{categoryId}">
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Quantity -->
+		<div class="form-group mb-3">
+            <label class="form-label">Quantity:</label>
+            <input class="form-control" type="number" th:field="*{quantity}">
+            <h5 class="alert alert-danger"
+                th:if="${#fields.hasErrors('quantity')}"
+                th:errors="*{quantity}">Quantity Error</h5>
+        </div>
+
+        <!-- Price -->
+		<div class="form-group mb-3">
+            <label class="form-label">Price ($):</label>
+            <input class="form-control" type="number" step="0.01" th:field="*{price}">
+            <h5 class="alert alert-danger"
+                th:if="${#fields.hasErrors('price')}"
+                th:errors="*{price}">Price Error</h5>
+        </div>
+
+        <!-- Description -->
+		<div class="form-group mb-3">
+            <label class="form-label">Description:</label>
+            <textarea class="form-control" th:field="*{description}" rows="3"></textarea>
+            <h5 class="alert alert-danger"
+                th:if="${#fields.hasErrors('description')}"
+                th:errors="*{description}">Description Error</h5>
+        </div>
+
+        <!-- Image -->
+		<div class="form-group mb-3">
+            <div class="row">
+
+                <!-- Edit mode image preview -->
+                <div class="col" th:if="${productModel.id != 0}">
+					<img th:src="@{'/uploads/' + ${logid} + '/' + ${productModel.image}}"
+					     class="card-img-top thumbnail"
+					     style="width:8rem;"
+						 alt="Product Image"
+						 onerror="this.onerror=null; this.src='/images/defaultProduct.png';">
+                </div>
+
+                <div class="col">
+                    <label class="form-label">Image:</label>
+                    <input type="hidden" th:field="*{image}">
+                    <input class="form-control"
+                           type="file"
+                           name="newimage"
+                           id="newimage"
+                           accept="image/jpeg, image/gif, image/png">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+		<div class="mb-3 text-center">
+            <input class="btn btn-success my-2"
+                   type="submit"
+                   th:value="${productModel.id == 0 ? 'Add Product' : 'Save Changes'}">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">List of Errors</div>
+            <div th:each="err : ${#fields.errors('*')}" class="alert alert-danger">
+                <span th:text="${err}"></span>
+            </div>
+        </div>
+    </form>
+    <p class="text-center">
+        <a th:href="@{/user/catalog/(logid=${catalogId})}">Back to Product List</a>
+    </p>
+</div>
+</div>
+</body>
+</html>

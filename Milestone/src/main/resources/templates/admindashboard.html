@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	  layout:decorate="~{layouts/default}">
+    <body>
+        <div layout:fragment="content">
+			<div class="row">
+				<div class="col"></div>		<!-- left column -->
+				<div class="col-10 g3 align-items-center">
+	                <h1 th:text="${title}">My Dashboard</h1>
+	                <p th:text="${message}">Welcome to your Milestone Inventory Dashboard!</p>
+				</div>
+				<div class="col"></div>		<!-- right column -->
+			</div>
+			<div class="row">
+				<div class="col col-10 g-3 align-items-center">
+					<div class="row dashboard-card-container">
+						
+						<!-- User List Card -->
+						<div th:replace="~{fragments/dashboard-card :: dashboardCard(
+						        '/images/UserListCard.png',
+						        'User List',
+						        'View and manage user accounts and their roles.',
+						        '/admin/users/',
+						        'bg-primary'
+						)}">
+						</div>
+					</div>
+				</div>
+				<div class="col"></div>		<!-- right column -->				        	
+			</div>
+        </div>						
+    </body>

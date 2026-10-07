@@ -1,0 +1,31 @@
+<div th:fragment="productModal">
+	<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog modal-lg modal-dialog-centered">
+	    <div class="modal-content">
+
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="modalTitle">Product Details</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+		  
+		   <div class="modal-body">
+	        <div class="row">
+	          <div class="col-md-4 text-center">
+	            <img id="modalImage" src="" class="img-fluid rounded" alt="Product Image" >
+	          </div>
+	          <div class="col-md-8">
+				<p class="modal-field"><strong>ID:</strong> <span id="modalId"></span></p>
+				<p class="modal-field"><strong>Name:</strong> <span id="modalName"></span></p>
+				<p class="modal-field"><strong>Brand:</strong> <span id="modalBrand"></span></p>
+				<p class="modal-field"><strong>Category:</strong> <span id="modalCategory"></span></p>
+				<p class="modal-field"><strong>Quantity:</strong> <span id="modalQty"></span></p>
+				<p class="modal-field"><strong>Price:</strong> $<span id="modalPrice"></span></p>
+	            <p><strong>Description:</strong></p>
+	            <p id="modalDescription" class="border rounded p-2 bg-light"></p>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>

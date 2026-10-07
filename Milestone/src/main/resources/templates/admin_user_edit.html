@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" 
+layout:decorate="~{layouts/center_form}">
+<body>
+<div layout:fragment="content">
+<div class="center-form-container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-10 g3 align-items-center">
+            <h1 th:text="${title}">Edit User</h1>
+            <p th:text="${message}">Welcome to your ListIT Edit User!</p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-10 g-3 align-items-center">
+            <form th:action="@{/admin/users/edit/{id}(id=${userinfo.userId})}"
+                  method="post"
+                  th:object="${userinfo}">
+
+				<div class="form-group mt-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                </div>
+
+				<div class="form-group mt-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                </div>
+
+				<div class="form-group mt-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                </div>
+
+				<div class="form-group mt-3">
+				    <label for="phone" class="form-label">Phone</label>
+				    <input type="text" class="form-control" id="phone" th:field="*{phone}" pattern="[0-9]{10}">
+				    
+				    <div class="text-danger"
+				         th:if="${#fields.hasErrors('phone')}"
+				         th:errors="*{phone}">
+				    </div>
+				</div>
+
+				<div class="form-group mt-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-control" id="role" th:field="*{role}" required>
+                        <option value="" disabled>Select Role</option>
+                        <option value="1">Admin</option>
+                        <option value="2">User</option>
+                    </select>
+                </div>
+				<div class="text-center">
+					<button type="submit" class="btn btn-success">Save Changes</button>
+				</div>
+            </form>
+			<p class="text-center mt-3">
+			    <a th:href="@{/admin/users/}">Back to User LIst</a>
+			</p>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>	
+</div>
+</body>
+</html>

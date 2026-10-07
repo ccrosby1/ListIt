@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/center_form}">
+
+<body>
+<div layout:fragment="content">
+	<div class="center-form-container">
+    <div>
+        <h1 th:text="${title}">Category Form</h1>
+        <span th:if="${error}">
+            <p class="alert alert-danger" th:text="${error}">Error</p>
+        </span>
+    </div>
+
+    <form th:action="@{${mode == 'add' ? '/user/categories/add' : '/user/categories/edit/' + category.id}}"
+          th:object="${category}"
+          method="post">
+
+        <!-- Category Name -->
+		<div class="form-group mt-3">
+            <label class="form-label">Category Name:</label>
+            <input class="form-control" type="text" th:field="*{name}" required>
+        </div>
+
+        <!-- Parent Category -->
+        <div class="form-group mt-3">
+            <label class="form-label">Parent Category:</label>
+            <select class="form-control" th:field="*{parentId}">
+                <option value="0">None</option>
+                <option th:each="p : ${parents}"
+                        th:value="${p.id}"
+                        th:text="${p.name}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-auto mt-4 text-center">
+            <button class="btn btn-success" type="submit"
+                    th:text="${mode == 'add' ? 'Add Category' : 'Save Changes'}">
+                Submit
+            </button>
+        </div>
+
+    </form>
+
+    <p class="text-center mt-3">
+        <a th:href="@{/user/categories/}">Back to Categories</a>
+    </p>
+</div>
+</div>
+</body>
+</html>

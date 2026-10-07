@@ -1,0 +1,59 @@
+<!-- Owned Catalog Card-->
+<th:block th:fragment="catalogCard(inv)">
+    <div class="card mx-2 my-2" style="width: 20rem">
+        <div style="padding: 1px; border: 1px solid transparent;"></div>
+        <div class="card-img-top"
+             th:style="|background-color:${inv.color};|">
+            <span class="col-12">
+                <img th:src="@{'/uploads/' + ${inv.id} + '/' + ${inv.image}}"
+                     class="card-img-top card-image"
+                     alt="Catalog Image"
+                     onerror="this.onerror=null; this.src='/images/defaultInventoryList.png';">
+            </span>
+        </div>
+        <div class="card-body">
+
+            <h5 class="card-title"
+                th:text="${inv.name}">
+                Catalog Name
+            </h5>
+
+            <p class="card-text"
+               th:text="${inv.description}">
+                Catalog Description
+            </p>
+
+            <a th:href="@{/user/catalog/(logid=${inv.id})}"
+               class="stretched-link">
+            </a>
+        </div>
+    </div>
+</th:block>
+
+<!-- Shared Catalog Card-->
+<th:block th:fragment="sharedCatalogCard(inv)">
+    <div class="card mx-2 my-2" style="width: 20rem">
+        <div style="padding: 1px; border: 1px solid transparent;"></div>
+        <div class="card-img-top" th:style="|background-color:${inv.color};|">
+            <span class="col-12">
+                <img th:src="@{'/uploads/' + ${inv.id} + '/' + ${inv.image}}"
+                     class="card-img-top card-image"
+                     alt="Shared Catalog Image"
+                     onerror="this.onerror=null; this.src='/images/defaultInventoryList.png';">
+            </span>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">
+                <span th:text="${inv.name}"></span>
+                <span class="badge bg-info" th:text="'Shared by ' + ${inv.username}"> Shared </span>
+            </h5>
+
+            <p class="card-text" th:text="${inv.description}">Shared Catalog Description</p>
+
+            <a th:href="@{/user/shared-inventory/{catalogId}(catalogId=${inv.id})}"
+               class="stretched-link"></a>
+        </div>
+
+    </div>
+</th:block>
